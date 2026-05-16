@@ -1,29 +1,13 @@
-# Friday
+# Friday Labs
 
-Friday is an open-source, Frappe-derived agentic framework for governed business agents.
+This repository is for Friday Labs company, managed-service, business planning, and future hosted-product material.
 
-The project is currently in design and Phase 1 planning. The immediate focus is the fundamentals:
+The open-source Friday framework lives here:
 
-- Agent Profile
-- Skill
-- permission checks
-- sandboxed execution
-- Execution Log
-- Permission Decision Log
-- Agent Project / Agent Task
-- configurable workflow and Kanban views
-- Control Room
+- [Fridaylabsinc/friday](https://github.com/Fridaylabsinc/friday)
 
-The first Phase 1 flagship dogfood is ERPNext Purchase Order automation after the governed framework loop is green.
+Use that repository for framework code, open-source issues, pull requests, roadmap execution, and the self-contained design dossier.
 
-## Start Here
+## Role Of This Repo
 
-- [Design dossier](docs/design/00-README.md)
-- [Roadmap](docs/ROADMAP.md)
-- [GitHub Project Plan](docs/project/GITHUB_PROJECT_PLAN.md)
-- [Contributing](CONTRIBUTING.md)
-- [Security](SECURITY.md)
-
-## License
-
-Friday is licensed under GNU GPL v3 or later. See [LICENSE](LICENSE).
+`fridaylabs` remains available for company-side planning around the managed SaaS, operations, partnerships, business strategy, and future hosted service work.

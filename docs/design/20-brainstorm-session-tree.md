@@ -309,9 +309,9 @@ FRIDAY
     ├─ Legal contract review
     └─ Customer service ticket triage
 
-34. PHASE 1 NORTH STAR
+34. PHASE 1 FLAGSHIP BUSINESS VALIDATION
     └─ Autonomous ERPNext PO workflow, end-to-end, one week, zero unsafe actions
-       └─ Everything else flows from validating this
+       └─ Runs after the governed framework loop is proven, not removed from Phase 1
 ```
 
 ---

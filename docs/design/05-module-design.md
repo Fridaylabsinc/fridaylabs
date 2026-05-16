@@ -11,7 +11,7 @@ The strategy is:
 - Keep domain capabilities as Friday apps/modules so the core does not become unmaintainable.
 - Periodically review upstream Frappe releases and selectively merge security, performance, permission, workflow, worker, and Desk improvements.
 
-See `39-friday-framework-strategy.md` for fork discipline.
+See `39-friday-framework-strategy.md` for fork discipline, `41-porting-strategy-hermes-erpnext-raven.md` for the workflow/Kanban translation, and `42-phase-one-authority-contract.md` for v0.1 scope.
 
 ## Framework Layers
 
@@ -161,7 +161,8 @@ The tree above is conceptual. Implementation may retain Frappe's internal packag
 | `project` | Link → Agent Project | |
 | `assigned_to_profile` | Link → Agent Profile | |
 | `required_skills` | Table → Skill | For dispatcher matching |
-| `workflow_state` | Link → Workflow State | Pending / Assigned / Executing / Blocked / Review / Completed |
+| `workflow_state` | Link → Workflow State | Configurable; first template may include Pending / Assigned / Executing / Blocked / Review / Completed |
+| `dispatchable` | Check / derived | True only when the current workflow state can be claimed by dispatcher |
 | `priority` | Select | low / normal / high / urgent |
 | `dependencies` | Table → Agent Task | Blocking dependencies |
 | `result` | Long Text / JSON | |
@@ -238,12 +239,12 @@ loop:
 Given a new task:
 
 ```
-1. Query Agent Task where workflow_state = 'Pending' and assigned_to_profile is null
+1. Query Agent Task where workflow_state is dispatchable and assigned_to_profile is null
 2. For each task:
    a. Find Agent Profiles where assigned_roles can satisfy task.required_skills
    b. Filter to profiles within resource quota
    c. Rank by load, specialisation, success rate (from Execution Log)
-   d. Atomically claim: update task.assigned_to_profile + state = 'Assigned'
+   d. Atomically claim: update task.assigned_to_profile + state = next assigned/running state
 3. Emit Frappe notification → agent's gateway listener wakes up
 ```
 

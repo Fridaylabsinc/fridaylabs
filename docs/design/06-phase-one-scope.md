@@ -11,6 +11,8 @@
 
 This document focuses on **Phase 1**.
 
+`42-phase-one-authority-contract.md` is the authority for v0.1 scope. Where this document conflicts with doc 42, doc 42 wins.
+
 ## Phase 1 Goal
 
 A working Friday framework installation on a single site that demonstrates the core thesis:
@@ -27,7 +29,7 @@ Phase 1 must also establish the product feel: bench remains the operational CLI,
 - Frappe bench + Frappe Framework v15 with PostgreSQL backend
 - pgvector extension installed
 - Redis configured
-- Docker installed on host (for agent sandboxing — basic, not yet full network isolation)
+- Docker installed on host with the minimum sandbox bar from doc 42
 - A single Frappe site dedicated to Friday
 
 ### Friday Framework Shell
@@ -61,7 +63,7 @@ Phase 1 must also establish the product feel: bench remains the operational CLI,
 
 ### Skill Execution
 - Single execution path: in-process for trusted skills, Docker container for untrusted
-- Container spawn uses a minimal config (Phase 1: resource caps only; full network isolation deferred to Phase 2)
+- Container spawn uses the doc 42 minimum sandbox bar: non-root user, resource limits, timeout/OOM handling, no host or Docker socket mounts, scoped credentials, structured result capture, and cleanup path
 - Result written back via Frappe REST API
 - Execution Log row submitted on completion
 
@@ -73,8 +75,8 @@ Phase 1 must also establish the product feel: bench remains the operational CLI,
 ### Task / Workflow
 - Agent Project + Agent Task DocTypes with a basic Workflow:
   `Pending → Assigned → Executing → Completed` (also `Blocked`, `Cancelled`)
-- Native Frappe Kanban view on Agent Task
-- Dispatcher runs as a Frappe scheduled job every minute, claims pending tasks
+- Native Frappe Kanban view on Agent Task, rendering workflow states as columns
+- Dispatcher runs as a Frappe scheduled job every minute, claims tasks in dispatchable workflow states
 
 ### LLM Integration
 - Single provider initially (OpenAI or Anthropic — pick the one with simplest API key flow)
@@ -96,7 +98,7 @@ Defer to Phase 2 or later:
 - ❌ Learning loop (Skill Draft generation)
 - ❌ Inter-agent communication / sub-agent spawning
 - ❌ Tirith command scanning
-- ❌ Full Docker network isolation (Phase 1 uses resource caps only)
+- ❌ Full production sandbox hardening: warm pool, egress proxy, full attack suite, multi-host orchestration
 - ❌ Approval workflows (Phase 1 has the DocType but no UI flow)
 - ❌ Batch processing
 
@@ -137,7 +139,7 @@ All of the following must be true:
 - [ ] Results are written back to Frappe via REST API.
 - [ ] An Execution Log row is submitted (immutable) with full audit data.
 - [ ] The agent's reply is delivered back to the CLI as a Chat Message.
-- [ ] An Agent Task can be created, claimed by the dispatcher, executed, and completed — all visible in the native Kanban view.
+- [ ] An Agent Task can be created, claimed by the dispatcher from a dispatchable workflow state, executed, and completed — all visible in list/report/Kanban views.
 
 If those checkboxes are green, Phase 1 is done.
 

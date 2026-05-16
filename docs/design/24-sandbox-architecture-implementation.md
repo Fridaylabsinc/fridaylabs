@@ -338,9 +338,10 @@ The security test suite is **automated and runs in CI**. A regression here is a 
 
 | Phase | Sandbox Capability |
 |---|---|
-| 1 (MVP) | Docker with hardened defaults; single-host; warm pool; egress allowlist; full observability |
-| 2 | Multi-host orchestration via RQ; cross-host pool aware dispatch |
+| 1 (MVP) | Minimum safe sandbox: non-root, resource limits, timeout/OOM handling, no host or Docker socket mounts, scoped credentials, structured result capture, cleanup path |
+| 1.5 | Hardened single-host sandbox: warm pool, egress allowlist/proxy, read-only rootfs everywhere, full observability, automated attack suite |
+| 2 | Multi-host orchestration via RQ; cross-host pool-aware dispatch |
 | 3 | Optional gVisor/Firecracker backend for high-risk skills |
 | 4 | Kubernetes-backed mode for cloud deployments |
 
-Phase 1 must include: read-only rootfs, capability drop, nonroot user, egress allowlist, masking, OOM/timeout enforcement, janitor cleanup. These are not optional.
+Phase 1 must include the minimum safe sandbox defined in doc 42. The hardened controls above move into Phase 1.5 unless a specific trust demo requires pulling them forward.

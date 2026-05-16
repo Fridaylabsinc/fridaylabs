@@ -290,7 +290,7 @@ For compliance, this trail answers: "Why did the agent act this way at time T?" 
 | 3 | Active learner job; agents propose drafts based on Execution Log analysis |
 | 4 | Cross-agent sharing, calibration models, automated rollback heuristics |
 
-Phase 1 must not run this loop. Friday's first proof point (autonomous ERPNext ops, doc 19) uses fixed skills curated by humans. Learning is a Phase 2+ feature once the agent runtime is proven safe.
+Phase 1 must not run this loop. Friday's v0.1 proof point uses fixed skills curated by humans; ERPNext PO operations remain the Phase 1 flagship dogfood after that governed framework loop is proven. Learning is a Phase 2+ feature once the agent runtime is proven safe.
 
 ---
 

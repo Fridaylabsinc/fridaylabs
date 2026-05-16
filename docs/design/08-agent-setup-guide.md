@@ -24,6 +24,8 @@ These define **what** Friday is and **what** Phase One must deliver. Load all of
 | Phase One Scope | `06-phase-one-scope.md` | What to build now, what to defer |
 | Legal & Branding | `07-legal-and-branding.md` | License headers, naming |
 | Friday Framework Strategy | `39-friday-framework-strategy.md` | Framework-first direction, fork discipline, product feel |
+| Porting Strategy | `41-porting-strategy-hermes-erpnext-raven.md` | Hermes Kanban lessons, flexible workflow, Raven/ERPNext boundaries |
+| Phase One Authority Contract | `42-phase-one-authority-contract.md` | Single source of truth for v0.1 scope |
 
 **Rule:** If anything in any other source contradicts these documents, the Friday specs win.
 
@@ -185,7 +187,7 @@ Every Python file begins with:
 
 When the agent encounters a conflict or ambiguity, resolve in this order:
 
-1. Friday specification documents (Sections 01–07 and 39)
+1. Friday authority documents (`39`, `41`, `42`), then core specs (`01`–`07`)
 2. Frappe Framework conventions (DocType API, hooks, permissions)
 3. Hermes Agent patterns (architectural guidance only)
 4. General Python / web best practices
@@ -249,8 +251,10 @@ This keeps the human in the loop on every significant decision without requiring
 
 Setup is complete when:
 
-- [ ] All seven Friday spec documents are loaded in the agent's context.
+- [ ] All core Friday spec documents are loaded in the agent's context.
 - [ ] `39-friday-framework-strategy.md` is loaded and understood as the framework identity guide.
+- [ ] `41-porting-strategy-hermes-erpnext-raven.md` is loaded and understood as the Hermes/ERPNext/Raven translation guide.
+- [ ] `42-phase-one-authority-contract.md` is loaded and understood as the v0.1 scope authority.
 - [ ] Hermes repository is accessible to the agent (read-only).
 - [ ] Frappe bench is provisioned with PostgreSQL + pgvector and Redis.
 - [ ] Friday framework shell is scaffolded with LICENSE, README, bench-aware setup, Friday-facing agent commands, Control Room workspace, and Agent Kernel structure.

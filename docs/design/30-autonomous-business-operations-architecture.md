@@ -4,7 +4,7 @@
 
 Friday runs an ERPNext-based SMB's operational backbone autonomously, with human supervisors approving high-stakes decisions and reviewing weekly. The business owner spends time on growth and customers, not on data entry, follow-ups, or reconciliations.
 
-This is Friday's Phase 1 north star and the foundation of the made-in-India mission: every Indian SMB owner gets a back-office team that never sleeps.
+This is Friday's first Phase 1 flagship business validation after the v0.1 framework loop is proven. The foundation of the made-in-India mission remains the same: every Indian SMB owner gets a back-office team that never sleeps.
 
 ## The Six-Layer Architecture
 
@@ -164,7 +164,7 @@ Every action with financial or contractual impact passes through an approval gat
 - Customer credit limit changes
 - Supplier price agreement changes
 
-Thresholds are configured per business in a `Friday Operations Policy` DocType. Below threshold = autopilot (doc 35); above threshold = War Room approval.
+Thresholds are configured per business in a `Friday Operations Policy` DocType. Below threshold may become autopilot after enough observed success data (doc 35); before that, actions remain shadow/manual/assisted. Above threshold = War Room approval.
 
 ## Event Triggers
 
@@ -209,14 +209,14 @@ Onboarding takes 1-2 weeks:
 
 **Week 2:**
 - Shadow mode: Friday observes, drafts, but doesn't execute. Supervisor reviews drafts.
-- Day 3-4 of shadow: confidence checked. If high, switch high-confidence task types to autopilot.
-- Day 7: review and decide which task types remain in shadow vs autopilot.
+- Day 3-4 of shadow: confidence checked. If high, switch selected task types to assisted execution, not autopilot.
+- Day 7: review and decide which task types remain in shadow vs assisted. Autopilot promotion waits for Phase 2+ success data.
 
 This gradual rollout is critical: trust must be earned, not assumed.
 
-## Phase 1 Scope
+## Phase 1 Flagship Scope
 
-Phase 1 ships:
+After v0.1 ships the governed framework loop, the Phase 1 PO track ships:
 - Procurement Agent (full)
 - Inventory Agent (read-only + alerts; no autonomous reconciliation yet)
 - Coordinator Agent (basic, with KPI dashboard)
@@ -235,9 +235,9 @@ Phase 3:
 - Industry-specific templates (manufacturing, distribution, services)
 - Multi-currency, multi-company support beyond ERPNext basics
 
-## Success Criterion (Phase 1)
+## Success Criterion
 
-Per the north star: in a 7-day dogfood with a real SMB, Friday autonomously executes the full Purchase Order workflow (creation, supplier follow-up, GRN matching, variance flagging) with zero unsafe actions, ≥80% of POs auto-completed without supervisor intervention, and 100% audit traceability.
+In a 7-day dogfood with a real or carefully simulated SMB, Friday executes the Purchase Order workflow (creation, supplier follow-up, GRN matching, variance flagging) with zero unsafe actions, human approval for high-risk actions, and 100% audit traceability.
 
 ## Open Questions
 

@@ -26,7 +26,7 @@ There are three Phase 1 shapes in the docs:
 | `14`, `16`, `24` | Integrated platform: Raven, ported ERPNext Project/Task/Issue, Agent Role Profile, file-mirrored skills, hardened sandbox |
 | `19`, `30`, `35` | ERPNext business autonomy: 7-day Purchase Order workflow with Procurement/Inventory/Coordinator agents |
 
-**Resolution needed:** Create `41-phase-one-authority-contract.md`.
+**Resolution:** Created `42-phase-one-authority-contract.md`.
 
 **Recommended decision:** Phase 1 proves the governed framework loop and Friday product feel. ERPNext PO automation becomes the first flagship demo/use case after the runtime is proven, not the definition of v0.1 completion.
 
@@ -148,16 +148,16 @@ Docs say GPL v3 now, AGPL v3 under consideration later.
 
 The dossier should add these before implementation:
 
-1. `41-phase-one-authority-contract.md`
+1. `42-phase-one-authority-contract.md`
    - Single source of truth for v0.1 scope.
 
-2. `42-control-room-product-spec.md`
+2. `43-control-room-product-spec.md`
    - Operator-facing trust UX: permissions, live activity, approvals, audit replay, pause/revoke.
 
-3. `43-technical-feasibility-spike.md`
+3. `44-technical-feasibility-spike.md`
    - Frappe version, DB, Raven, ERPNext, bench/Friday command strategy.
 
-4. `44-fork-policy.md`
+4. `45-fork-policy.md`
    - Core divergence rules and upstream update discipline.
 
 5. `docs/security-claims-audit.md`

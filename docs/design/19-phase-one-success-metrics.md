@@ -2,29 +2,32 @@
 
 > **Purpose:** Define the concrete, measurable criteria by which Phase 1 succeeds or fails. These metrics override personal feelings about progress. If they aren't green, Phase 1 is not done.
 
-This document complements doc 06 (Phase One Scope) and doc 11 (Validation Checklist). Where those define **what** to build and **how** to verify each slice, this one defines **whether the whole Phase succeeded**.
+This document complements doc 06 (Phase One Scope), doc 11 (Validation Checklist), and doc 42 (Phase One Authority Contract). Where this document conflicts with doc 42, doc 42 wins.
 
 ---
 
 ## 1. The North-Star Metric
 
-> **Friday can autonomously manage an ERPNext SMB business workflow end-to-end, with full audit trail and zero unsafe actions, for one continuous week.**
+> **Friday proves the governed framework loop end-to-end: profile, skill, permission check, sandboxed execution, immutable logs, configurable task workflow, and Control Room visibility.**
 
-If this single metric is green, Phase 1 succeeded. If it isn't, no amount of feature ticks compensates.
+If this single metric is green, v0.1 succeeded. If it is not green, no amount of feature breadth compensates.
 
-The qualifying workflow for Phase 1 is **autonomous Purchase Order processing**: from re-order trigger → PO draft → supplier match → submission → goods receipt → invoice match → payment scheduling. End-to-end, with the System Manager Agent provisioning sub-agent users, and Procurement, Finance, and Inventory agents handling their domains.
+The ERPNext Purchase Order workflow remains the first Phase 1 flagship dogfood after the governed loop is green. It is not removed; it is sequenced behind the framework proof.
 
 ---
 
 ## 2. Tier 1 Metrics (Must Hit — Phase 1 fails without these)
 
-### M1.1 — End-to-end autonomous PO workflow
-- [ ] System Manager Agent provisions Procurement, Finance, Inventory agent users in ERPNext
-- [ ] Re-order signal triggers Procurement Agent to draft a PO
-- [ ] PO routes through approval workflow (auto if under threshold, supervisor approval if over)
-- [ ] On approval, PO submitted to ERPNext via Procurement Agent's own user
-- [ ] Goods Receipt and Purchase Invoice flow through with multi-agent coordination
-- [ ] All 7 days complete without operator intervention beyond initial setup and approval clicks
+### M1.1 — End-to-end governed framework loop
+- [ ] User creates or submits work into Friday
+- [ ] Friday resolves the correct Agent Profile
+- [ ] Active Skills are loaded from governed DocTypes
+- [ ] Skill invocation is permission-checked before execution
+- [ ] Denied calls are rejected and logged
+- [ ] Permitted call executes through the sandboxed path
+- [ ] Execution Log and Permission Decision Log are written
+- [ ] Agent Task moves through configurable workflow states
+- [ ] Control Room shows the task, agent, execution, and audit trail
 
 ### M1.2 — Zero unsafe actions
 - [ ] No permission boundary violations across the dogfood week
@@ -120,8 +123,9 @@ These matter in Phase 2 and beyond. In Phase 1 they're noise.
 - Doc 11 Validation Checklist green before merging the slice
 - Human acknowledgement (one approving reviewer) required
 
-### End-of-Phase (dogfood week)
-- Run the autonomous PO workflow for 7 calendar days
+### End-of-Phase
+- Run the governed framework loop repeatedly through the validation checklist
+- After v0.1 is green, run the ERPNext PO flagship dogfood as the Phase 1 business validation
 - Operators check in daily; record any intervention
 - At end of week, compile a **Phase 1 Completion Report** (template in §7)
 
@@ -143,7 +147,7 @@ When all metrics are evaluated, produce:
 - Dogfood week: ___ to ___
 
 ## Tier 1 (Must-Hit)
-- [ ] M1.1 End-to-end PO workflow — evidence: ___
+- [ ] M1.1 End-to-end governed framework loop — evidence: ___
 - [ ] M1.2 Zero unsafe actions — evidence: ___
 - [ ] M1.3 Full audit trail — evidence: ___
 - [ ] M1.4 Validation checklist green — evidence: link to checklist
@@ -176,7 +180,7 @@ When all metrics are evaluated, produce:
 ## 8. Failure Modes and Responses
 
 ### If M1.1 (end-to-end) fails
-The workflow isn't autonomous enough. Identify the human-intervention points and decide: which were genuinely unavoidable (escalations the agent correctly raised) vs. which were architectural gaps (agent should have handled but didn't). Architectural gaps block Phase 1 completion; they must be fixed before launch.
+The framework loop is not coherent enough. Identify whether the break is profile resolution, skill loading, permission gating, sandbox execution, task workflow, logging, or Control Room visibility. Architectural gaps block v0.1 completion.
 
 ### If M1.2 (unsafe actions) fails
 Stop everything. A safety incident is a critical bug. Root-cause analysis required, fix shipped, dogfood week restarted.

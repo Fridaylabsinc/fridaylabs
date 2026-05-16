@@ -222,9 +222,9 @@ Each slice corresponds roughly to a week in `06-phase-one-scope.md`. Slices buil
 2. Implement `friday/tasks/workflow.py` hook on Task `on_update` for state transitions.
 3. Implement `friday/tasks/dispatcher.py`:
    - Scheduled job every 60 seconds via `hooks.py`.
-   - Query Pending tasks without assigned profile.
+   - Query tasks in dispatchable workflow states without assigned profile.
    - Match required skills against available profiles.
-   - Atomic claim: `update Agent Task set assigned_to_profile = ?, workflow_state = 'Assigned' where name = ? and assigned_to_profile is null` (use `frappe.db.sql` with `FOR UPDATE SKIP LOCKED` for safety).
+   - Atomic claim: `update Agent Task set assigned_to_profile = ?, workflow_state = ? where name = ? and assigned_to_profile is null` (use `frappe.db.sql` with `FOR UPDATE SKIP LOCKED` for safety).
 4. On task assigned → emit real-time event → agent runner picks up.
 5. Enable native Kanban view on Agent Task grouped by `workflow_state`.
 6. Tests:

@@ -179,7 +179,7 @@ These three combined: every fetch, every approval, every rotation is queryable. 
 
 ## 7. ERPNext-Specific Pattern: One User Per Agent
 
-A critical case for Friday's Phase 1 north star (autonomous ERPNext ops).
+A critical case for Friday's Phase 1 ERPNext PO flagship validation after the v0.1 framework loop is proven.
 
 Naive setup: one ERPNext API user shared across all Friday agents. Audit trail in ERPNext says "API User created Purchase Order #123" — useless for forensics.
 

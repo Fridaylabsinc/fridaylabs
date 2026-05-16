@@ -50,7 +50,7 @@ Documents that guide any AI coding agent (Claude Code, Cursor, Aider, etc.) thro
 |---|----------|---------|
 | 17 | [Open Source Launch Playbook](./17-open-source-launch-playbook.md) | Repository setup, license sequence, community kickoff |
 | 18 | [Go-to-Market Strategy](./18-go-to-market-strategy.md) | India-first, FridayLabs SaaS, contributor revenue share |
-| 19 | [Phase One Success Metrics](./19-phase-one-success-metrics.md) | KPIs for the 7-day PO workflow north star |
+| 19 | [Phase One Success Metrics](./19-phase-one-success-metrics.md) | KPIs for the governed framework loop and first flagship validation |
 | 20 | [Brainstorm Session Tree](./20-brainstorm-session-tree.md) | Visual tree of all ideation branches from design sessions |
 
 ### Agent Intelligence
@@ -97,6 +97,7 @@ Documents that guide any AI coding agent (Claude Code, Cursor, Aider, etc.) thro
 | 38 | [Performance Optimization & Bottleneck Analysis](./38-performance-optimization-bottleneck-analysis.md) | LLM latency, pgvector tuning, warm pool, monitoring |
 | 40 | [Gap Analysis & Resolution Plan](./40-gap-analysis-and-resolution-plan.md) | Contradictions, missing decisions, and pre-implementation resolution order |
 | 41 | [Porting Strategy: Hermes, ERPNext, Raven](./41-porting-strategy-hermes-erpnext-raven.md) | Real-world Hermes Kanban lessons translated into Friday's workflow, profile, skill, and War Room strategy |
+| 42 | [Phase One Authority Contract](./42-phase-one-authority-contract.md) | Single source of truth for Friday v0.1 scope |
 
 ---
 
@@ -124,7 +125,7 @@ Documents that guide any AI coding agent (Claude Code, Cursor, Aider, etc.) thro
 3. The hosted FridayLabs SaaS splits net revenue with contributors via a transparent, public score (40/30/20/10 split).
 
 **Phase 1 North Star:**
-Friday autonomously manages an ERPNext SMB workflow (Purchase Order end-to-end), 7-day dogfood, zero unsafe actions, full audit trail. See document 19 for detailed success metrics.
+Friday proves the governed framework loop, then uses it for the ERPNext Purchase Order flagship dogfood. The order matters: first profile, skill, permission check, sandboxed execution, logs, task workflow, and Control Room; then PO automation on that foundation. See documents 19, 30, and 42.
 
 ---
 
@@ -132,7 +133,7 @@ Friday autonomously manages an ERPNext SMB workflow (Purchase Order end-to-end),
 
 **If you want the vision and why-Friday-exists:** Read 01, 02, 18, 39.
 
-**If you're an engineer implementing Phase 1:** Read 39, 40, and 41 first, then 06, then 08-11 in order, then 14, 24, 30.
+**If you're an engineer implementing Phase 1:** Read 39, 40, 41, and 42 first, then 06, then 08-11 in order, then 14, 24, 30.
 
 **If you're a security reviewer:** Read 04, 23, 24, 37.
 
@@ -150,9 +151,9 @@ Friday autonomously manages an ERPNext SMB workflow (Purchase Order end-to-end),
 
 All documents in this set are design specifications, not implementation manuals. They describe what Friday should be, how its parts fit together, and what trade-offs were considered. Implementation will inevitably surface details that require revisions; these documents will be updated as design contact with reality refines them.
 
-Documents 39, 40, 41, 06, 11, and 19 are the most operationally precise (framework strategy, gap resolution, porting strategy, Phase 1 scope, validation, metrics). Documents 12 onward represent design depth that informs Phase 1 priorities but extends into Phase 2-4 as noted in each.
+Documents 39, 40, 41, 42, 06, 11, and 19 are the most operationally precise (framework strategy, gap resolution, porting strategy, Phase 1 authority, scope, validation, metrics). Documents 12 onward represent design depth that informs Phase 1 priorities but extends into Phase 2-4 as noted in each.
 
-**Total content:** 41 design documents, ~9,000+ lines of markdown.
+**Total content:** 42 design documents, ~9,000+ lines of markdown.
 
 ---
 

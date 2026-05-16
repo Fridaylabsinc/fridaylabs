@@ -1,8 +1,8 @@
-# Friday — An Agentic Framework Powered by Frappe, Made in India
+# Friday — A Frappe-Derived Agentic Framework, Made in India
 
-> **Tagline:** Enterprise agentic intelligence, governed by Frappe's backbone — for Indian growing businesses, by Indian builders.
+> **Tagline:** Enterprise agentic intelligence, governed by a Frappe-derived backbone — for Indian growing businesses, by Indian builders.
 
-Friday is an open-source agentic framework that re-engineers proven agent patterns (Hermes by Nous Research, OpenClaw) on top of the Frappe Framework. The goal is enterprise-grade agent governance — role-based permissions, audit trails, sandboxing, structured skill schemas — that today's agent frameworks lack out of the box.
+Friday is an open-source, Frappe-derived agentic framework that re-engineers proven agent patterns (Hermes by Nous Research, OpenClaw) into an enterprise application substrate. The goal is enterprise-grade agent governance — role-based permissions, audit trails, sandboxing, structured skill schemas — that today's agent frameworks lack out of the box.
 
 **The mission:** every Indian SMB owner gets a back-office team that never sleeps, runs on their ERPNext, and operates within auditable boundaries.
 
@@ -21,6 +21,7 @@ Friday is an open-source agentic framework that re-engineers proven agent patter
 | 05 | [Module Design](./05-module-design.md) | Proposed DocTypes, gateway internals, dispatcher logic |
 | 06 | [Phase One Scope](./06-phase-one-scope.md) | MVP scope, milestones, deliverables |
 | 07 | [Legal & Branding](./07-legal-and-branding.md) | GPL v3 / AGPL v3, trademark, open-source strategy |
+| 39 | [Friday Framework Strategy](./39-friday-framework-strategy.md) | Framework-first direction: Frappe-derived substrate, Friday-native product feel |
 
 ### Implementation Guides (Specification-Driven Development)
 
@@ -100,14 +101,16 @@ Documents that guide any AI coding agent (Claude Code, Cursor, Aider, etc.) thro
 ## Quick Summary
 
 **What Friday is:**
-- An agentic framework built as a Frappe app, made in India
-- Re-implements Hermes/OpenClaw patterns on Frappe with enterprise governance
+- A Frappe-derived agentic framework, made in India
+- Re-implements Hermes/OpenClaw patterns inside a governed enterprise substrate
+- Framework-first from day one: bench-aware Friday agent commands, Friday Control Room, agent-native primitives
 - Permission-first: every action gated through Frappe role matrix BEFORE queueing
 - Audit-everything: every decision, escalation, skill call logged
 - Multi-agent collaboration via Frappe Projects/Tasks + Raven War Rooms
 
 **What Friday is not:**
 - A fork of Hermes or OpenClaw
+- A thin "AI app installed on Frappe" with no framework identity
 - A proprietary product (open-source under GPL v3, with AGPL v3 under consideration for launch)
 - Tied to a single LLM provider (provider-agnostic)
 - Built only for tech-savvy users — built for SMB operators
@@ -124,9 +127,9 @@ Friday autonomously manages an ERPNext SMB workflow (Purchase Order end-to-end),
 
 ## How to Read This Documentation
 
-**If you want the vision and why-Friday-exists:** Read 01, 02, 18.
+**If you want the vision and why-Friday-exists:** Read 01, 02, 18, 39.
 
-**If you're an engineer implementing Phase 1:** Read 06, then 08-11 in order, then 14, 24, 30.
+**If you're an engineer implementing Phase 1:** Read 39, 06, then 08-11 in order, then 14, 24, 30.
 
 **If you're a security reviewer:** Read 04, 23, 24, 37.
 
@@ -144,9 +147,9 @@ Friday autonomously manages an ERPNext SMB workflow (Purchase Order end-to-end),
 
 All documents in this set are design specifications, not implementation manuals. They describe what Friday should be, how its parts fit together, and what trade-offs were considered. Implementation will inevitably surface details that require revisions; these documents will be updated as design contact with reality refines them.
 
-Documents 06, 11, and 19 are the most operationally precise (Phase 1 scope, validation, metrics). Documents 12 onward represent design depth that informs Phase 1 priorities but extends into Phase 2-4 as noted in each.
+Documents 39, 06, 11, and 19 are the most operationally precise (framework strategy, Phase 1 scope, validation, metrics). Documents 12 onward represent design depth that informs Phase 1 priorities but extends into Phase 2-4 as noted in each.
 
-**Total content:** 38 design documents, ~8,700 lines of markdown.
+**Total content:** 39 design documents, ~9,000 lines of markdown.
 
 ---
 

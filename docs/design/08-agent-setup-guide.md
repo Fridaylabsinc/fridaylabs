@@ -23,6 +23,7 @@ These define **what** Friday is and **what** Phase One must deliver. Load all of
 | Module Design | `05-module-design.md` | App layout, DocTypes, gateway internals |
 | Phase One Scope | `06-phase-one-scope.md` | What to build now, what to defer |
 | Legal & Branding | `07-legal-and-branding.md` | License headers, naming |
+| Friday Framework Strategy | `39-friday-framework-strategy.md` | Framework-first direction, fork discipline, product feel |
 
 **Rule:** If anything in any other source contradicts these documents, the Friday specs win.
 
@@ -101,18 +102,20 @@ CREATE EXTENSION IF NOT EXISTS vector;
 CREATE EXTENSION IF NOT EXISTS pg_trgm;  -- for fuzzy search
 ```
 
-### 2.4 Friday App Scaffold
+### 2.4 Friday Framework Scaffold
 
 ```bash
-bench new-app friday --no-git
-# Then re-initialize git with proper license/structure (see section 3)
-bench --site friday.localhost install-app friday
+# Start from the selected Frappe source substrate.
+# Keep Frappe internals close to upstream unless a deliberate Friday core patch is needed.
+# Add the Friday Agent Kernel modules and Friday-facing agent commands/workspace defaults.
+# Do not remove bench; bench remains the operational CLI for site/app lifecycle.
 ```
 
 ### 2.5 Project Repository
 
 ```
-friday/                                  ← Frappe app, created above
+friday/                                  ← Friday framework repo
+├── framework/                           ← Frappe-derived substrate, if split from app modules
 ├── LICENSE                              ← GPL v3 (full text)
 ├── README.md
 ├── CONTRIBUTING.md
@@ -126,9 +129,9 @@ friday/                                  ← Frappe app, created above
 │   ├── ISSUE_TEMPLATE/
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── docs/
-│   └── (the seven Friday spec documents)
+│   └── design/
 ├── tests/
-└── friday/                              ← Python package, modules go here
+└── friday/                              ← Friday Agent Kernel and framework modules
 ```
 
 ---
@@ -182,7 +185,7 @@ Every Python file begins with:
 
 When the agent encounters a conflict or ambiguity, resolve in this order:
 
-1. Friday specification documents (Sections 01–07)
+1. Friday specification documents (Sections 01–07 and 39)
 2. Frappe Framework conventions (DocType API, hooks, permissions)
 3. Hermes Agent patterns (architectural guidance only)
 4. General Python / web best practices
@@ -247,9 +250,10 @@ This keeps the human in the loop on every significant decision without requiring
 Setup is complete when:
 
 - [ ] All seven Friday spec documents are loaded in the agent's context.
+- [ ] `39-friday-framework-strategy.md` is loaded and understood as the framework identity guide.
 - [ ] Hermes repository is accessible to the agent (read-only).
 - [ ] Frappe bench is provisioned with PostgreSQL + pgvector and Redis.
-- [ ] Friday app is scaffolded with LICENSE, README, and basic structure.
+- [ ] Friday framework shell is scaffolded with LICENSE, README, bench-aware setup, Friday-facing agent commands, Control Room workspace, and Agent Kernel structure.
 - [ ] Pre-commit hooks are installed and passing on empty repo.
 - [ ] Initial commit is made on a `main` branch.
 - [ ] The agent confirms understanding by producing a written summary of Phase One's goal in its own words.

@@ -2,11 +2,11 @@
 
 ## Vision
 
-Friday is an open-source agentic framework that combines:
+Friday is an open-source, Frappe-derived agentic framework that combines:
 - **Hermes Agent's agentic capabilities** — agent loop, skills system, learning loop, multi-platform messaging, Kanban orchestration, voice, vision, browser automation, MCP integration.
 - **Frappe Framework's enterprise backbone** — role-based permissions, structured DocTypes, workflows, real-time notifications, background workers, audit trails.
 
-The goal: an agentic system that enterprises can actually deploy because governance is built in, not bolted on.
+The goal: an agentic framework that enterprises can actually deploy because governance is built in, not bolted on. Friday should feel like its own framework from day one, while using Frappe source and primitives as the proven substrate.
 
 ## Design Principles
 
@@ -14,7 +14,8 @@ The goal: an agentic system that enterprises can actually deploy because governa
 2. **Permission-first.** Every skill invocation passes through Frappe's role-based permission matrix before it ever hits a queue.
 3. **Sandboxed execution.** Every agent runs in an isolated Docker container with scoped credentials and resource quotas.
 4. **Structured over freeform.** Skills, profiles, and task states are defined by schemas — agents work with structured data, not loose prompts.
-5. **Open-source by default.** Friday is GPL v3 / AGPL v3 from day one, developed in public.
+5. **Framework-first product feel.** Friday owns the CLI, default workspace, agent primitives, and control-room experience; Frappe remains the substrate, not the product boundary.
+6. **Open-source by default.** Friday is GPL v3 / AGPL v3 from day one, developed in public.
 
 ## High-Level Architecture
 
@@ -43,7 +44,7 @@ The goal: an agentic system that enterprises can actually deploy because governa
              └──────────────┼──────────────┘
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  FRAPPE BACKEND (Friday module + site)                          │
+│  FRIDAY FRAMEWORK BACKEND (Frappe-derived substrate)             │
 │  ─ DocTypes: Agent Profile, Skill, Task, Chat Message, etc.     │
 │  ─ Role-based permissions                                       │
 │  ─ Workflows (Pending → Assigned → Executing → Review → Done)   │
@@ -75,6 +76,17 @@ The goal: an agentic system that enterprises can actually deploy because governa
 9. **Result persisted** — Execution Log DocType records inputs, outputs, agent ID, timestamp, success/failure.
 10. **Response back** — Agent's reply written as a new Chat Message; adapter delivers it back to the user platform.
 11. **Audit trail** — Every step is queryable in Frappe for compliance and debugging.
+
+## Framework Positioning
+
+Friday is not merely a custom app installed into an otherwise generic Frappe site. The intended product is a Frappe-derived framework:
+
+- Frappe supplies the runtime substrate: DocTypes, ORM, permissions, users, workflows, scheduler, workers, files, realtime, and Desk.
+- Friday reshapes the default developer and operator experience around governed AI agents.
+- Friday-native primitives (Agent Profile, Skill, Execution Log, Permission Decision Log, Workflow Request, Sandbox Execution) are treated as core concepts.
+- The control room is the product surface; the agent runtime is the engine.
+
+See `39-friday-framework-strategy.md` for the framework strategy and fork discipline.
 
 ## Multi-Agent Collaboration
 

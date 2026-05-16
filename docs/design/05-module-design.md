@@ -2,17 +2,30 @@
 
 ## Build Strategy
 
-Friday is built as a **Frappe app** during development, with the long-term path to becoming a Frappe **core module** once stable. This lets you:
+Friday is built as a **Frappe-derived framework** with a strong app/module boundary. Early development may still use Frappe app mechanics internally, but the product must feel like Friday from day one: Friday CLI, Friday Control Room, and agent-native primitives.
 
-- Develop independently without forking Frappe core
-- Install on any Frappe site via `bench get-app friday && bench install-app friday`
-- Iterate quickly with the community
-- Contribute to Frappe core later, once the design is proven
+The strategy is:
+
+- Start from Frappe source and preserve its proven substrate where it serves Friday.
+- Add or wrap framework-level behavior only where agents need first-class support.
+- Keep domain capabilities as Friday apps/modules so the core does not become unmaintainable.
+- Periodically review upstream Frappe releases and selectively merge security, performance, permission, workflow, worker, and Desk improvements.
+
+See `39-friday-framework-strategy.md` for fork discipline.
+
+## Framework Layers
+
+| Layer | Owns |
+|---|---|
+| Friday Framework Core | Frappe-derived runtime, CLI wrapper, site/app lifecycle, Desk shell, auth, DocTypes, permissions, workflows, jobs, files, realtime |
+| Friday Agent Kernel | Agent Profile, Agent Role Profile, Skill, Execution Log, Permission Decision Log, Workflow Request, Gateway, Dispatcher, Sandbox, LLM Provider |
+| Friday Apps | ERPNext operations, Raven bridge, memory/wiki, analytics, specialist agents, auto-research, multi-site communication |
 
 ## App Layout
 
 ```
-friday/                                  ← bench app root
+friday/                                  ← framework repo root
+├── framework/                           ← Frappe-derived substrate (kept close to upstream where possible)
 ├── friday/
 │   ├── __init__.py
 │   ├── hooks.py                         ← app-level hooks (events, scheduler, fixtures)
@@ -103,6 +116,8 @@ friday/                                  ← bench app root
 ├── README.md
 └── docs/
 ```
+
+The tree above is conceptual. Implementation may retain Frappe's internal package layout while exposing Friday-facing CLI, docs, workspace defaults, and module names.
 
 ## Core DocTypes (Phase 1)
 

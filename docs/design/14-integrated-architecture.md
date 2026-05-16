@@ -1,6 +1,6 @@
-# 14 — Integrated Architecture: Friday + Frappe + Raven + ERPNext Project/Task + Hermes
+# 14 — Integrated Architecture: Friday Framework + Frappe Substrate + Raven + ERPNext Project/Task + Hermes
 
-> **Purpose:** Define how the four foundational layers of Friday — **Frappe Framework**, **Raven**, **ported ERPNext Project/Task/Issue**, and **Hermes' gateway/agent loop** — fit together as one coherent system.
+> **Purpose:** Define how the foundational layers of Friday — **Frappe-derived framework substrate**, **Raven**, **ported ERPNext Project/Task/Issue**, and **Hermes' gateway/agent loop patterns** — fit together as one coherent system.
 
 This document supersedes any earlier assumptions that Friday builds Project/Task/Issue from scratch or builds chat from scratch. The unified stack reuses battle-tested Frappe-ecosystem apps wherever possible and reserves custom code for what's genuinely new (the agentic layer).
 
@@ -10,12 +10,12 @@ This document supersedes any earlier assumptions that Friday builds Project/Task
 
 | Layer | Source | Role in Friday |
 |---|---|---|
-| **Frappe Framework v15/v16** | `frappe/frappe` | Foundation: DocTypes, permissions, workflows, real-time, scheduler, RQ, REST API |
+| **Friday Framework Core** | Frappe-derived source substrate | Foundation: DocTypes, permissions, workflows, real-time, scheduler, RQ, REST API, bench operations, Friday agent commands, control-room shell |
 | **Raven** | `The-Commit-Company/raven` | Communication and War Room workspaces |
 | **Project + Task + Issue** | Ported from `frappe/erpnext` | Orchestration backbone for multi-agent work |
 | **Friday Core (Hermes-derived)** | New code, inspired by `NousResearch/hermes-agent` | Agent loop, gateway, skills, dispatcher, isolation |
 
-Friday is the assembly point. Each layer keeps its upstream identity, gets updates from its upstream maintainers, and is wired together by Friday's integration code.
+Friday is the assembly point and product identity. Frappe remains the proven substrate, but Friday owns the framework experience. Upstream Frappe improvements are reviewed and selectively merged where they strengthen Friday's core.
 
 ---
 
@@ -34,7 +34,7 @@ The result: Friday focuses its custom engineering effort on the **agentic layer*
 
 ## 3. Layer Responsibilities
 
-### 3.1 Frappe Framework (Foundation)
+### 3.1 Friday Framework Core (Frappe-Derived Foundation)
 
 Owns:
 - DocType schema and ORM
@@ -46,7 +46,14 @@ Owns:
 - REST API (used by agent containers and external integrations)
 - User accounts and authentication (every Agent Profile links to a User)
 
-Friday adds: nothing to Frappe core. Pure consumer.
+Friday adds framework identity and agent-native extension points where needed:
+- bench remains the operational CLI; Friday adds agent-facing command groups or wrappers
+- Friday Control Room workspace defaults
+- actor/trace context propagation for agent execution
+- framework-level audit hooks where app hooks are insufficient
+- agent-aware defaults for jobs, workflows, and execution logs
+
+Core divergence must follow `39-friday-framework-strategy.md`: minimal, documented, and only when a module/app cannot safely provide the behavior.
 
 ### 3.2 Raven (Communication)
 
@@ -310,10 +317,11 @@ Hermes is now best understood as a **reference implementation of the agentic ide
 
 ## 11. Phase Mapping Update
 
-This integrated architecture refines the Phase One scope as follows (no scope expansion — same target, clearer composition):
+This integrated architecture refines the Phase One scope as follows. Where this document conflicts with `39-friday-framework-strategy.md`, the framework strategy wins for product identity and fork discipline.
 
 **Phase 1 (unchanged scope, clarified dependencies):**
-- Install Frappe v15 (with v16 readiness)
+- Establish Friday Framework shell from selected Frappe source substrate
+- Preserve bench for operations; add Friday-facing agent commands and Friday Control Room workspace
 - Install Raven (used for War Room from day one)
 - Port Agent Project, Agent Task, Agent Issue from ERPNext into Friday app
 - Build Friday core: Agent Profile, Agent Role Profile, Skill (with file mirror), Execution Log, Permission Decision Log, Workflow Request
@@ -353,9 +361,9 @@ These TODOs are noted explicitly to prevent silent guesses during implementation
 
 Friday is the **assembly** of:
 
-- **Frappe Framework** for the data, permission, workflow, and real-time substrate
+- **Friday Framework Core** for the Frappe-derived data, permission, workflow, bench operations, Friday agent commands, workspace, and real-time substrate
 - **Raven** for human-agent and agent-agent collaboration via War Rooms
 - **Ported Project / Task / Issue** for orchestration scaffolding
 - **Friday Core** for the agentic layer (gateway, dispatcher, skills, isolation, permission gate)
 
-This is the **architecture of record**. Earlier documents (01–13) remain valid; this document defines how their pieces compose into one operational system.
+This is an **integrated architecture record**. The framework-first direction in `39-friday-framework-strategy.md` is the higher-level product identity record.

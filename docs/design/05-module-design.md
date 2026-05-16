@@ -1,0 +1,327 @@
+# 05 — Module Design
+
+## Build Strategy
+
+Friday is built as a **Frappe app** during development, with the long-term path to becoming a Frappe **core module** once stable. This lets you:
+
+- Develop independently without forking Frappe core
+- Install on any Frappe site via `bench get-app friday && bench install-app friday`
+- Iterate quickly with the community
+- Contribute to Frappe core later, once the design is proven
+
+## App Layout
+
+```
+friday/                                  ← bench app root
+├── friday/
+│   ├── __init__.py
+│   ├── hooks.py                         ← app-level hooks (events, scheduler, fixtures)
+│   ├── modules.txt                      ← list of Friday modules
+│   │
+│   ├── gateway/                         ← orchestrator
+│   │   ├── doctype/
+│   │   │   ├── agent_session/
+│   │   │   └── chat_message/
+│   │   ├── dispatcher.py
+│   │   ├── session_manager.py
+│   │   ├── permission_check.py
+│   │   └── prompt_builder.py
+│   │
+│   ├── agents/                          ← agent profile + execution
+│   │   ├── doctype/
+│   │   │   ├── agent_profile/
+│   │   │   ├── agent_execution_log/
+│   │   │   └── agent_memory/
+│   │   ├── runner.py                    ← spawns Docker container
+│   │   ├── isolation.py                 ← cgroups, networking, mounts
+│   │   └── lifecycle.py
+│   │
+│   ├── skills/                          ← skill schema + curation
+│   │   ├── doctype/
+│   │   │   ├── skill/
+│   │   │   ├── skill_draft/
+│   │   │   └── skill_usage_metric/
+│   │   ├── loader.py                    ← caches skills into Redis
+│   │   ├── curator.py                   ← autonomous curator job
+│   │   └── learner.py                   ← drafts skills from execution logs
+│   │
+│   ├── tasks/                           ← Kanban / project orchestration
+│   │   ├── doctype/
+│   │   │   ├── agent_project/
+│   │   │   ├── agent_task/
+│   │   │   └── task_dependency/
+│   │   └── workflow.py                  ← state transitions
+│   │
+│   ├── messaging/                       ← platform adapters
+│   │   ├── doctype/
+│   │   │   ├── chat_platform/           ← Telegram, Discord, etc. config
+│   │   │   └── message_attachment/
+│   │   ├── adapters/
+│   │   │   ├── telegram.py
+│   │   │   ├── discord.py
+│   │   │   ├── slack.py
+│   │   │   ├── cli.py
+│   │   │   └── email.py
+│   │   └── delivery.py
+│   │
+│   ├── approvals/                       ← human-in-the-loop
+│   │   ├── doctype/
+│   │   │   └── workflow_request/
+│   │   └── router.py
+│   │
+│   ├── memory/                          ← long-term store + vector search
+│   │   ├── doctype/
+│   │   │   ├── memory_entry/
+│   │   │   └── user_model/
+│   │   ├── vector_store.py              ← pgvector interface
+│   │   └── retrieval.py
+│   │
+│   ├── tools/                           ← non-skill capabilities
+│   │   ├── doctype/
+│   │   │   ├── mcp_server/
+│   │   │   ├── browser_task/
+│   │   │   ├── vision_task/
+│   │   │   └── image_generation_task/
+│   │   └── workers/
+│   │
+│   ├── permissions/                     ← gateway permission engine
+│   │   ├── matrix.py
+│   │   ├── cache.py
+│   │   └── decisions.py
+│   │
+│   └── api/                             ← REST endpoints for agents
+│       ├── v1/
+│       │   ├── skills.py
+│       │   ├── tasks.py
+│       │   ├── messages.py
+│       │   └── permissions.py
+│       └── auth.py
+│
+├── setup.py
+├── pyproject.toml
+├── LICENSE                              ← GPL v3
+├── README.md
+└── docs/
+```
+
+## Core DocTypes (Phase 1)
+
+### Agent Profile
+| Field | Type | Notes |
+|---|---|---|
+| `profile_name` | Data | Unique |
+| `description` | Text | |
+| `assigned_roles` | Table → Role | |
+| `model_provider` | Link | OpenAI, Anthropic, OpenRouter, local |
+| `model_name` | Data | |
+| `system_prompt` | Long Text | Persona / SOUL |
+| `permitted_skills` | Table → Skill | Optional explicit whitelist |
+| `resource_quota` | Section break with quota fields | |
+| `network_allowlist` | Table | |
+| `requires_approval_above_risk` | Select | low / medium / high / always |
+| `status` | Select | Active / Suspended / Retired |
+
+### Skill
+| Field | Type | Notes |
+|---|---|---|
+| `skill_name` | Data | Unique |
+| `description` | Text | Used for L0 matching |
+| `when_to_use` | Long Text | L1 disclosure |
+| `instructions` | Long Text | L2 disclosure |
+| `parameters_schema` | JSON | OpenAPI-compatible |
+| `required_doctypes` | Table | For permission check |
+| `required_operations` | Table | read / write / submit etc. |
+| `risk_level` | Select | low / medium / high / critical |
+| `requires_approval` | Check | |
+| `status` | Select | Active / Draft / Experimental / Retired / Archived |
+| `usage_count` | Int | Read-only, updated by hook |
+| `last_used` | Datetime | Read-only |
+| `created_by_agent` | Link → Agent Profile | If learned |
+
+### Agent Task
+| Field | Type | Notes |
+|---|---|---|
+| `title` | Data | |
+| `description` | Long Text | |
+| `project` | Link → Agent Project | |
+| `assigned_to_profile` | Link → Agent Profile | |
+| `required_skills` | Table → Skill | For dispatcher matching |
+| `workflow_state` | Link → Workflow State | Pending / Assigned / Executing / Blocked / Review / Completed |
+| `priority` | Select | low / normal / high / urgent |
+| `dependencies` | Table → Agent Task | Blocking dependencies |
+| `result` | Long Text / JSON | |
+| `started_at`, `completed_at` | Datetime | |
+
+### Chat Message
+| Field | Type | Notes |
+|---|---|---|
+| `session_id` | Link → Agent Session | |
+| `platform` | Link → Chat Platform | telegram, discord, etc. |
+| `direction` | Select | inbound / outbound |
+| `sender_id` | Data | Platform-specific |
+| `agent_profile` | Link → Agent Profile | For outbound |
+| `content` | Long Text | |
+| `attachments` | Table | |
+| `timestamp` | Datetime | |
+| `processed` | Check | |
+
+### Execution Log
+| Field | Type | Notes |
+|---|---|---|
+| `agent_profile` | Link | |
+| `skill` | Link | |
+| `task` | Link → Agent Task | Optional |
+| `parameters` | JSON | |
+| `result` | JSON | |
+| `status` | Select | success / failed / rejected / timeout |
+| `permission_decision` | Link → Permission Decision Log | |
+| `duration_ms` | Int | |
+| `tokens_used` | Int | |
+| Submittable | Yes | Append-only audit trail |
+
+### Workflow Request
+| Field | Type | Notes |
+|---|---|---|
+| `agent_profile` | Link | |
+| `skill` | Link | |
+| `parameters` | JSON | |
+| `risk_level` | Select | |
+| `requested_at` | Datetime | |
+| `approved_by` | Link → User | |
+| `decision` | Select | approved / rejected / expired |
+| `decision_reason` | Text | |
+
+## Gateway Internals
+
+The gateway is a long-running Python process (a Frappe background worker variant or standalone service). It:
+
+1. Subscribes to Frappe's Redis pubsub for `chat_message.new` and `agent_task.new` events.
+2. On event → resolves session, agent profile, intent.
+3. Calls Permission Check module — fail-fast if denied.
+4. Routes to Dispatcher if multi-agent task; otherwise spawns single agent runner.
+5. Maintains an LRU cache of active `AIAgent` instances per session (TTL ~1 hour, max 128 — Hermes pattern).
+6. Streams responses back via platform adapters.
+
+The agent loop itself is inherited conceptually from Hermes' `AIAgent.run_conversation()`:
+
+```
+loop:
+  prompt = prompt_builder.build(session, profile, skills, memory)
+  response = llm.complete(prompt)
+  if response.has_tool_call:
+    skill = resolve_skill(response.tool_call.name)
+    permission_check(profile, skill)              ← gateway gate
+    result = execute_in_sandbox(skill, args)      ← Docker
+    append_to_session(result)
+  else:
+    deliver(response.text)
+    break
+```
+
+## Dispatcher Logic
+
+Given a new task:
+
+```
+1. Query Agent Task where workflow_state = 'Pending' and assigned_to_profile is null
+2. For each task:
+   a. Find Agent Profiles where assigned_roles can satisfy task.required_skills
+   b. Filter to profiles within resource quota
+   c. Rank by load, specialisation, success rate (from Execution Log)
+   d. Atomically claim: update task.assigned_to_profile + state = 'Assigned'
+3. Emit Frappe notification → agent's gateway listener wakes up
+```
+
+## Skill Loading
+
+On gateway startup, or on `Skill` DocType change event:
+
+```
+1. Query all Skills where status = 'Active'
+2. Filter by current agent profile's permissions
+3. Convert each Skill into LLM tool definition:
+   - description (L0)
+   - parameters_schema (JSON Schema)
+   - required permissions metadata
+4. Cache in Redis: key = f"skills:{profile_id}", TTL 300s
+5. Inject into agent's system prompt at run_conversation time
+```
+
+## Curator Job (Periodic)
+
+Runs every 24 hours via Frappe Scheduler:
+
+```
+1. Query Skill where status = 'Experimental' and created_at < 30 days ago
+   - If usage_count > threshold and success_rate > 80% → promote to 'Active'
+   - Else → 'Archived'
+2. Query Skill where status = 'Active' and last_used < 90 days ago
+   - Move to 'Retired'
+3. Detect overlapping skills (similar description embeddings)
+   - Flag for human consolidation
+4. Write curator run report as a DocType row
+```
+
+## Learning Loop
+
+Runs every 6 hours:
+
+```
+1. Query successful Execution Logs from last 6 hours
+2. Cluster by similar task patterns (embedding similarity)
+3. For each cluster:
+   - If no Skill covers it, draft a Skill Draft DocType
+   - If a Skill exists but a more efficient pattern emerged, propose edit
+4. Notify supervisor role to review Skill Drafts
+```
+
+## REST API Surface (for agents)
+
+All endpoints under `/api/method/friday.api.v1.*`:
+
+- `skills.list` — paginated, filtered by agent's permissions
+- `skills.invoke` — execute a skill (or queue + return job_id)
+- `tasks.claim` — atomic claim of next task
+- `tasks.update_state` — Kanban transition
+- `messages.send` — outbound message (writes to Chat Message)
+- `memory.search` — semantic search via pgvector
+- `permissions.check` — explicit permission probe (for agent planning)
+
+Every endpoint authenticates via Frappe API key + applies role permissions automatically.
+
+## Hooks Configuration (`hooks.py`)
+
+Key wiring points:
+
+```python
+# Scheduler
+scheduler_events = {
+    "hourly": ["friday.skills.curator.tick"],
+    "daily": ["friday.skills.learner.run"],
+    "cron": {
+        "*/1 * * * *": ["friday.tasks.dispatcher.tick"],
+    },
+}
+
+# DocType hooks
+doc_events = {
+    "Chat Message": {
+        "after_insert": "friday.gateway.session_manager.on_new_message",
+    },
+    "Agent Task": {
+        "on_update": "friday.tasks.workflow.on_state_change",
+    },
+    "Skill": {
+        "after_insert": "friday.skills.loader.invalidate_cache",
+        "on_update": "friday.skills.loader.invalidate_cache",
+    },
+}
+
+# Real-time event allowlist
+website_route_rules = []
+override_whitelisted_methods = {}
+```
+
+## Module Boundaries
+
+Each module is independently usable. A site can install Friday and use only the `messaging` + `agents` + `skills` modules without enabling the `tools` (vision, browser, image gen) module, for example. This matches the plugin-style flexibility Hermes offers but enforces it at the module-import level.

@@ -94,13 +94,24 @@ FRIDAY
       ├─ Agent Project (from ERPNext Project)
       ├─ Agent Task (from ERPNext Task) + assigned_to_profile, required_skills
       └─ Agent Issue (from ERPNext Issue) for blockers
-         └─ Native Frappe Kanban view replaces Hermes custom Kanban
+         └─ Native Frappe Workflow + Kanban view replaces Hermes fixed Kanban
 
 9. FOUR LAYERS LOCKED
    ├─ Frappe Framework (foundation)
    ├─ Raven (collaboration)
    ├─ Ported ERPNext Project/Task/Issue (orchestration)
    └─ Friday Core (gateway, skills, dispatcher, isolation) — new code
+```
+
+```
+9A. REAL-WORLD HERMES KANBAN FAILURE
+    └─ Asked Hermes to create profiles, board, and tasks
+       ├─ Basic bounded tasks worked
+       ├─ Multi-agent setup repeatedly failed
+       ├─ Profiles and skills were wrongly built
+       ├─ Fixed columns did not match real business workflows
+       └─ INSIGHT: agents should not improvise the operating model;
+          they should operate inside typed, validated, governable DocTypes
 ```
 
 ---
@@ -314,6 +325,8 @@ DECISION INVARIANTS (apply across all branches)
 ├─ No external vector DB (pgvector inside Postgres)
 ├─ Dual-storage Skills (DocType authoritative for governance, file for portability)
 ├─ Human-in-the-loop at critical junctures (approvals, escalations, skill changes)
+├─ Kanban is a view, not the workflow
+├─ Agents may propose operating-model changes, but validation/approval activates them
 └─ Open-source GPL v3 / AGPL v3 — no proprietary trap doors
 
 ENGINEERING TODOs FLAGGED (deferred to Phase 1 design spikes)

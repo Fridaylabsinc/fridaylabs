@@ -96,6 +96,7 @@ Documents that guide any AI coding agent (Claude Code, Cursor, Aider, etc.) thro
 | 37 | [Multi-Site Inter-Agent Communication](./37-multi-site-inter-agent-communication.md) | ACP protocol, partner sites, service discovery, mTLS |
 | 38 | [Performance Optimization & Bottleneck Analysis](./38-performance-optimization-bottleneck-analysis.md) | LLM latency, pgvector tuning, warm pool, monitoring |
 | 40 | [Gap Analysis & Resolution Plan](./40-gap-analysis-and-resolution-plan.md) | Contradictions, missing decisions, and pre-implementation resolution order |
+| 41 | [Porting Strategy: Hermes, ERPNext, Raven](./41-porting-strategy-hermes-erpnext-raven.md) | Real-world Hermes Kanban lessons translated into Friday's workflow, profile, skill, and War Room strategy |
 
 ---
 
@@ -105,6 +106,7 @@ Documents that guide any AI coding agent (Claude Code, Cursor, Aider, etc.) thro
 - A Frappe-derived agentic framework, made in India
 - Re-implements Hermes/OpenClaw patterns inside a governed enterprise substrate
 - Framework-first from day one: bench-aware Friday agent commands, Friday Control Room, agent-native primitives
+- Turns Hermes-style multi-agent Kanban into flexible Frappe workflows: Kanban is a view, not the workflow
 - Permission-first: every action gated through Frappe role matrix BEFORE queueing
 - Audit-everything: every decision, escalation, skill call logged
 - Multi-agent collaboration via Frappe Projects/Tasks + Raven War Rooms
@@ -130,7 +132,7 @@ Friday autonomously manages an ERPNext SMB workflow (Purchase Order end-to-end),
 
 **If you want the vision and why-Friday-exists:** Read 01, 02, 18, 39.
 
-**If you're an engineer implementing Phase 1:** Read 39 and 40 first, then 06, then 08-11 in order, then 14, 24, 30.
+**If you're an engineer implementing Phase 1:** Read 39, 40, and 41 first, then 06, then 08-11 in order, then 14, 24, 30.
 
 **If you're a security reviewer:** Read 04, 23, 24, 37.
 
@@ -148,9 +150,9 @@ Friday autonomously manages an ERPNext SMB workflow (Purchase Order end-to-end),
 
 All documents in this set are design specifications, not implementation manuals. They describe what Friday should be, how its parts fit together, and what trade-offs were considered. Implementation will inevitably surface details that require revisions; these documents will be updated as design contact with reality refines them.
 
-Documents 39, 40, 06, 11, and 19 are the most operationally precise (framework strategy, gap resolution, Phase 1 scope, validation, metrics). Documents 12 onward represent design depth that informs Phase 1 priorities but extends into Phase 2-4 as noted in each.
+Documents 39, 40, 41, 06, 11, and 19 are the most operationally precise (framework strategy, gap resolution, porting strategy, Phase 1 scope, validation, metrics). Documents 12 onward represent design depth that informs Phase 1 priorities but extends into Phase 2-4 as noted in each.
 
-**Total content:** 40 design documents, ~9,000+ lines of markdown.
+**Total content:** 41 design documents, ~9,000+ lines of markdown.
 
 ---
 

@@ -26,6 +26,7 @@ We arrived here by elimination, not assumption:
 - **Chat from scratch?** Rejected — Raven already exists, is GPL-compatible, has Slack-grade UX, integrates with Frappe natively, supports document sharing and message actions. Building chat ourselves would be reinvention.
 - **Project/Task from scratch?** Rejected — ERPNext's Project, Task, and Issue DocTypes are mature, support time tracking, dependencies, and Kanban natively. Porting (rather than depending on full ERPNext) keeps Friday self-contained while inheriting that maturity.
 - **Hermes' backend?** Rejected — file-based skills, SQLite sessions, ad-hoc permissions don't meet enterprise requirements. The agent loop and skill ideas are kept; the storage and governance are replaced.
+- **Hermes' fixed Kanban lifecycle?** Rejected — real business workflows need configurable states and transitions. Friday keeps durable coordination but renders Frappe Workflow states as Kanban columns.
 - **Custom permission engine?** Rejected — Frappe's role-based system is mature and battle-tested. Friday extends it; it does not replace it.
 
 The result: Friday focuses its custom engineering effort on the **agentic layer** — gateway, dispatcher, sandbox, permission gating — and reuses the rest.
@@ -87,7 +88,7 @@ Owns (after porting):
 Friday adds:
 - `assigned_to_profile` field on Agent Task (linking to Agent Profile)
 - `required_skills` table on Agent Task
-- Workflow with states tuned for agentic execution: Pending → Assigned → Executing → Blocked → Review → Completed → Cancelled
+- Workflow templates tuned for agentic execution; the default may be Pending → Assigned → Executing → Blocked → Review → Completed → Cancelled, but projects can define different states
 - Dispatcher integration (claims unassigned tasks)
 - Real-time event emission on state changes
 
@@ -127,7 +128,7 @@ A real example tracing through all four layers:
    → posts a pinned message with the project brief and emoji legend
 
 3. Dispatcher (Frappe scheduled job, runs every 60s)
-   → queries Agent Task where workflow_state='Pending' AND assigned_to_profile is null
+   → queries Agent Task where workflow_state is dispatchable AND assigned_to_profile is null
    → matches each task to eligible Agent Profile based on required_skills ⊆ profile's permitted skills
    → atomically claims the task: SELECT ... FOR UPDATE SKIP LOCKED
    → updates workflow_state='Assigned'
@@ -301,7 +302,7 @@ The War Room is not just a chat channel — it's the project's command center.
 | AIAgent loop | ADAPT — keep loop, replace state plumbing |
 | Prompt builder | ADAPT — replace file reads with DocType reads |
 | Skill markdown system | REWRITE — replaced by Skill DocType + file mirror |
-| Kanban dashboard | REWRITE — replaced by Frappe Kanban View on Agent Task |
+| Kanban dashboard | REWRITE — replaced by Frappe Workflow + Kanban View on Agent Task |
 | Platform adapters | ADAPT for CLI (Phase 1); Raven becomes the "chat platform" for human interaction |
 | Cron / scheduler | REWRITE — replaced by Frappe Scheduler |
 | Session storage (SQLite + FTS5) | REWRITE — replaced by PostgreSQL + tsvector |
@@ -312,6 +313,8 @@ The War Room is not just a chat channel — it's the project's command center.
 | Inter-agent dispatching | REWRITE — replaced by dispatcher querying Agent Task |
 
 Hermes is now best understood as a **reference implementation of the agentic ideas**, not a codebase to fork. Friday is a fresh implementation of those ideas on the Frappe + Raven + ported-ERPNext substrate.
+
+The specific Hermes Kanban lesson is captured in `41-porting-strategy-hermes-erpnext-raven.md`: agents may propose profiles, skills, tasks, and workflows, but they do not silently activate safety-critical structure. Validated DocTypes and Frappe Workflow own the operating model.
 
 ---
 

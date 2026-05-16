@@ -15,7 +15,8 @@ The goal: an agentic framework that enterprises can actually deploy because gove
 3. **Sandboxed execution.** Every agent runs in an isolated Docker container with scoped credentials and resource quotas.
 4. **Structured over freeform.** Skills, profiles, and task states are defined by schemas — agents work with structured data, not loose prompts.
 5. **Framework-first product feel.** Friday owns the CLI, default workspace, agent primitives, and control-room experience; Frappe remains the substrate, not the product boundary.
-6. **Open-source by default.** Friday is GPL v3 / AGPL v3 from day one, developed in public.
+6. **Kanban is a view, not the workflow.** Business workflows are defined through Frappe Workflow and task types; Kanban renders those states instead of hardcoding a universal board.
+7. **Open-source by default.** Friday is GPL v3 / AGPL v3 from day one, developed in public.
 
 ## High-Level Architecture
 
@@ -87,18 +88,19 @@ Friday is not merely a custom app installed into an otherwise generic Frappe sit
 - The control room is the product surface; the agent runtime is the engine.
 
 See `39-friday-framework-strategy.md` for the framework strategy and fork discipline.
+See `41-porting-strategy-hermes-erpnext-raven.md` for the Hermes Kanban lessons and the Friday translation.
 
 ## Multi-Agent Collaboration
 
-Instead of reimplementing Hermes' Kanban, Friday leverages Frappe's native Project / Task / Kanban view:
+Instead of reimplementing Hermes' fixed Kanban, Friday leverages Frappe's native Project / Task / Workflow / Kanban stack:
 
 - **Project DocType** = an agentic workflow (e.g. "Q4 Customer Onboarding").
 - **Task DocType** = a unit of work, linked to an Agent Profile and a Workflow.
 - **Workflow states** are fully customisable per project (e.g. `Pending → Assigned → Executing → Blocked → Review → Completed`).
-- **Frappe's Kanban view** renders the board for free.
+- **Frappe's Kanban view** renders workflow states as columns.
 - **Real-time notifications** push state changes to agents and supervisors.
 
-The Dispatcher is just a query against Frappe's Task table — no separate state machine to maintain.
+The Dispatcher is a query against validated Frappe records: dispatchable workflow state, complete dependencies, active skills, eligible Agent Profile, permission pass, and quota availability. It does not ask an agent to invent the operating model at runtime.
 
 ## Learning Loop
 
@@ -114,7 +116,7 @@ The Dispatcher is just a query against Frappe's Task table — no separate state
 |---|---|---|
 | Skill storage | Markdown files on disk | Structured DocTypes |
 | Permissions | Per-tool config, easy to misconfigure | Frappe role matrix, enforced at gateway |
-| Multi-agent board | Custom Kanban + SQLite | Native Frappe Project/Task/Kanban |
+| Multi-agent board | Custom Kanban + SQLite | Frappe Project/Task/Workflow/Kanban |
 | Audit trail | Log files | DocType-level immutable history |
 | Isolation | Process-level | Docker + Frappe API boundary |
 | Memory | File-based + optional vector | PostgreSQL + pgvector, queryable |
